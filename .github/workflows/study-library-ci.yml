@@ -64,3 +64,24 @@ jobs:
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
+
+  docker-build:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: |
+          docker build \
+            -t study-library-backend:ci \
+            ./backend
+
+      - name: Build frontend image
+        run: |
+          docker build \
+            -f frontend/Dockerfile \
+            --build-arg NEXT_PUBLIC_API_URL=https://example.invalid/api \
+            -t study-library-frontend:ci \
+            .
